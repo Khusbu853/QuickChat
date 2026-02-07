@@ -78,7 +78,7 @@ const Profile = () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("file", file);
 
     try {
       const response = await apiClient.post(

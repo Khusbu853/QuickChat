@@ -10,6 +10,7 @@ import { apiClient } from "@/lib/api-client";
 import { LOGOUT_ROUTE } from "@/utils/constants";
 import { toast } from "sonner";
 import { setUser } from "../../../../redux/authSlice";
+import { setSelectedChatData, setSelectedChatType } from "../../../../redux/chatSlice";
 
 const ProfileInfo = () => {
   const { user } = useSelector((store) => store.auth);
@@ -23,6 +24,8 @@ const ProfileInfo = () => {
         }); 
         if(response.status === 200) {
             navigate('/auth');
+            dispatch(setSelectedChatType(undefined))
+            dispatch(setSelectedChatData(undefined))
             dispatch(setUser(null));
             toast.success(response.data.message);
         }

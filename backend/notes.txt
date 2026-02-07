@@ -1,0 +1,26 @@
+
+Que:- Difference between http, polling sse and web sockets expalin all this with examples??
+
+Ans:- HTTP, long polling, Server-Sent Events (SSE), and WebSockets are all methods for communication between a client and a server, primarily used on the web, but they differ significantly in how they manage the connection and facilitate data flow. 
+Feature 	HTTP (Short Polling)	Long Polling	SSE (Server-Sent Events)	WebSockets
+Protocol	HTTP/S	HTTP/S	HTTP/S	ws:// or wss://
+Connection	Opens, transfers data, closes	Opens, stays open until data/timeout, closes	Single, long-lived, kept open	Single, persistent, full-duplex
+Data Flow	Client requests, server responds	Server holds request, responds when data is ready	Server pushes data to client only (uni-directional)	Bi-directional (client and server can send at any time)
+Overhead	High (for frequent updates)	Medium	Low	Very Low (after handshake)
+Use Cases	Standard web browsing, APIs	Simple chat apps, status updates	Live stock tickers, news feeds, stream updates	Real-time gaming, complex chat apps, collaborative editing
+HTTP (Short Polling)
+HTTP, in its basic form (often called short polling in this context), operates on a request/response cycle. The client sends a request to the server, and the server sends a response. The connection is then closed. To get updates, the client must repeatedly initiate new requests at regular intervals. 
+Explanation: It's the standard, synchronous way the web works. The client is always the one asking for information.
+Example: When you navigate to a different page on a website, your browser sends an HTTP GET request for that page, and the server sends the HTML content back. If you want to check for new emails every minute, your email client would send a new request every 60 seconds to ask, "Are there any new emails?" 
+Long Polling
+Long polling is a variation designed to reduce the latency of updates without the overhead of constantly opening and closing connections. 
+Explanation: The client sends a request, but the server holds the connection open until it has new data to send or a timeout occurs. Once data is sent, the connection closes, and the client immediately opens a new request to wait for the next update.
+Example: A simple web chat application. A user's browser sends a request for new messages. The server doesn't respond until another user sends a message. As soon as the message arrives, the server sends it to the waiting client, and the client immediately opens a new request to wait again. 
+Server-Sent Events (SSE)
+SSE is a standardized HTML5 technology that allows a web server to push updates to the client over a single, persistent HTTP connection. 
+Explanation: Unlike polling methods, the connection is kept open indefinitely. The server can push data whenever it wants, but the client cannot push data back over the same connection. It is uni-directional. It also has built-in features like automatic re-connection.
+Example: A live stock market data stream. The client opens a single connection, and the server continuously pushes new stock prices to the client as they change, without the client ever needing to ask for them [1]. Other examples include live news feeds or real-time game scores. You can find more information about using the EventSource API on the Mozilla Developer Network. 
+WebSockets
+WebSockets provide a persistent, bi-directional, full-duplex communication channel over a single TCP connection. 
+Explanation: After an initial HTTP "handshake," the connection is upgraded to a WebSocket connection. Once established, both the client and server can send data to each other at any time, with very low latency and overhead. This makes it ideal for applications requiring near real-time interaction.
+Example: A complex, real-time multiplayer online game. Both the client (player's moves) and the server (game state updates, other players' actions) need to send and receive data constantly and with minimal delay. A collaborative document editor (like Google Docs) where multiple users' edits need to appear instantly for everyone else is another great example. The MDN WebSockets page provides extensive documentation for developers

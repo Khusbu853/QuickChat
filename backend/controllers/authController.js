@@ -13,12 +13,12 @@ export const signup = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required" });
+      return res.status(400).json({ message: "Email and password required", success: false });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists", success: false });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -41,11 +41,12 @@ export const signup = async (req, res) => {
         email: user.email,
         profileSetup: user.profileSetup
       },
-      success: true
+      success: true,
+      message: "User signup successfully"
     });
 
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message, success: false });
   }
 };
 
@@ -55,17 +56,17 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required" });
+      return res.status(400).json({ message: "Email and password required", success: false });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ message: "User not found", success: false });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: "Password is incorrect" });
+      return res.status(400).json({ message: "Password is incorrect", success: false });
     }
 
     res.cookie("authToken", createToken(email, user._id), {
@@ -84,11 +85,12 @@ export const login = async (req, res) => {
         image: user.image,
         color: user.color
       },
-      success: true
+      success: true,
+      message: "User login successfully"
     });
 
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message, success: false });
   }
 };
 
